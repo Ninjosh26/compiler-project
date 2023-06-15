@@ -42,3 +42,12 @@ The syntax for Micro will be defined using an extended Backus-Naur form (BNF).
 12. &lt;add op>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; -> PLUSOP
 13. &lt;add op>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; -> MINUSOP
 14. &lt;system goal>&ensp;&ensp;&ensp;&ensp;-> &lt;program> SCANEOF
+
+## Target Language
+The target language for this compiler is rather simple. It is an assembly language for a three-address machine. The instructions have the following form:
+
+`
+OP A,B,C
+`
+
+in which OP is an op-code (or pseudo-op), A and B are operands, and C is the result's destination. The operands may be variable names or integer literals. For Micro, all arithmetic operations are assumed to be done on integers.

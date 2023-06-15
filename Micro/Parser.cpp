@@ -1,5 +1,10 @@
+#include <stdio.h>
 #include "Parser.h"
 #include "Scanner.h"
+
+token current_token;
+extern char token_buffer[];
+extern int curr_buffer_idx;
 
 void Parser::system_goal() {
     /* <system goal> ::= <program> SCANEOF */
@@ -132,4 +137,52 @@ void Parser::add_op() {
         default:
             syntax_error(next);
     }
+}
+
+void Parser::match(token t) {
+    token next = scanner();
+    if (t != next) {
+        syntax_error(next);
+    }
+    current_token = next;
+}
+
+token Parser::next_token() {
+    token next = scanner();
+
+    switch (next) {
+        case token::BEGIN:
+        case token::END:
+        case token::ID:
+        case token::WRITE:
+        case token::READ:
+        case token::INTLITERAL:
+            for (int i = curr_buffer_idx - 1; i >= 0; i--) {
+                ungetc(token_buffer[i], stdin);
+            }
+            break;
+        case token::ASSIGNOP:
+            ungetc('=', stdin); ungetc(':', stdin);
+            break; 
+        case token::COMMA:
+            ungetc(',', stdin);
+            break;   
+        case token::LPAREN:
+            ungetc('(', stdin);
+            break;
+        case token::MINUSOP:
+            ungetc('-', stdin);
+            break;
+        case token::PLUSOP:
+            ungetc('+', stdin);
+            break;
+        case token::RPAREN:
+            ungetc(')', stdin);
+            break;
+        case token::SEMICOLON:
+            ungetc(';', stdin);
+            break;
+    }
+
+    return next;
 }
