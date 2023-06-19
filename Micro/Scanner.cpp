@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdexcept>
-#include <string>
+#include <string.h>
 #include "Scanner.h"
 
 char token_buffer[32];
@@ -22,10 +22,10 @@ void buffer_char(int c) {
 
 token check_reserved() {
     // begin, end, read, and write are reserved
-    if (token_buffer == "begin") { return BEGIN; }
-    if (token_buffer == "write") { return WRITE; }
-    if (token_buffer == "read") { return READ; }
-    if (token_buffer == "end") { return END; }
+    if (strcmp(token_buffer, "begin") == 0) { return BEGIN; }
+    if (strcmp(token_buffer, "write") == 0) { return WRITE; }
+    if (strcmp(token_buffer, "read") == 0) { return READ; }
+    if (strcmp(token_buffer, "end") == 0) { return END; }
 
     return ID;
 }
