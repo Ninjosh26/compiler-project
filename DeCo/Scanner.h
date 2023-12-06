@@ -48,6 +48,9 @@ public:
 
         // Special cases
         INT_VAL, FLOAT_VAL, IDENT, SCAN_EOF, ERROR,
+
+        // Used for getting size of enum
+        SIZE,
     };
 
 private:
