@@ -44,28 +44,27 @@ This is the grammar description for the DeCo grammar. This is written is Wirth S
 \<funcCall> = "call" \<ident> "(" [ relExpr { "," relExpr } ] ")" . <br>
 \<assignStat> = \<assign> ";" . <br>
 \<funcCallStat> = \<funcCall> ";" . <br>
-\<ifStat> = "if" \<relation> "{" \<statSeq> "}" [ "else" "{" \<statSeq> "}" ] . <br>
-\<whileStat> = "while" \<relation> "{" <statSeq> "}" . <br>
-\<doWhileStat> = "do" "{" \<statSeq> "}" "while" \<relation> ";" . <br>
-\<forStat> = "for" "(" [ \<assign> ] ";" [ \<relExpr> ] ";" [ \<assign> ] ")" "{" \<statSeq> "}" . <br>
-\<repeatStat> = "repeat" "{" \<statSeq> "}" "until" \<relation> ";" . <br>
+\<ifStat> = "if" \<relation> "{" [ \<statSeq> ] "}" [ "else" "{" [ \<statSeq> ] "}" ] . <br>
+\<whileStat> = "while" \<relation> "{" [ \<statSeq> ] "}" . <br>
+\<doWhileStat> = "do" "{" [ \<statSeq> ] "}" "while" \<relation> ";" . <br>
+\<forStat> = "for" "(" [ \<assign> ] ";" [ \<relExpr> ] ";" [ \<assign> ] ")" "{" [ \<statSeq> ] "}" . <br>
+\<repeatStat> = "repeat" "{" [ \<statSeq> ] "}" "until" \<relation> ";" . <br>
 \<returnStat> = "return" [ \<relExpr> ] .
 
 \<statement> = \<varDecl> | \<assignStat> | \<funcCallStat> | \<ifStat> | \<whileStat> | \<doWhileStat> | \<forStat> | \<repeatStat> | \<returnStat> . <br>
-\<statSeq> = { \<statement> } .
+\<statSeq> = \<statement> { \<statement> } .
 
 \<typeDecl> = \<type> { "[" integerLit "]" } . <br>
 \<varDecl> = \<typeDecl> \<ident> { "," ident } ";" . <br>
 \<paramType> = \<type> { "[" "]" } . <br>
 \<paramDecl> = \<paramType> \<ident> . <br>
 \<paramList> = "(" [ \<paramDecl> { "," \<paramDecl> } ] ")" . <br>
-\<funcBody> = "{" { varDecl } statSeq "}" . <br>
+\<funcBody> = "{" [ statSeq ] "}" . <br>
 \<funcDecl> = "function" \<ident> \<paramList> ":" ( "void" | \<type> ) \<funcBody> .
 
-\<decl> = \<varDecl> | \<funcDecl> . <br>
-\<declList> = { \<decl> } .
+\<declList> = ( \<varDecl> | \<funcDecl> ) { \<varDecl> | \<funcDecl> } .
 
-\<program> = \<declList> "main" "(" ")" ":" "void" "{" \<statSeq> "}" .
+\<program> = [ \<declList> ] "main" "(" ")" ":" "void" "{" [ \<statSeq> ] "}" .
 
 ## 1. Lexical Analysis
 In this step, the text file is read through, and tokens are constructed based on terminals in the grammar. The scanner (or lexer) builds these tokens based on simplified maximal munch, which attempts to get the longest match possible.
