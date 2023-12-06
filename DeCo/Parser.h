@@ -1,6 +1,7 @@
 #ifndef _PARSER_H_
 #define _PARSER_H_
 
+#include <vector>
 #include "Scanner.h"
 
 enum NonTerminal {
@@ -36,17 +37,51 @@ enum NonTerminal {
     SIZE,
 };
 
+// Custom parsing exception
+class QuitParseException : public std::exception {
+private:
+
+    std::string msg;
+
+public:
+
+    QuitParseException(std::string m): msg(m) {}
+
+    const char* what() {
+        return msg.data();
+    }
+};
+
 class Parser {
 private:
 
+    Scanner scanner;
     Token currToken;
+    std::vector<std::string> errBuf;
 
 public:
+
+    // Create a parser using the provided Scanner
+    Parser(Scanner s);
+
+    // Print out any errors
+    void printErrorReport();
+
+    // Check if there were any parsing errors
+    bool hasError();
 
     // Useful for seeing the first sets of each nonterminal
     static void printFirstSets();
 
 private:
+
+    // Get syntax error message
+    std::string reportSyntaxError(Token::Kind kind);
+    std::string reportSyntaxError(NonTerminal nt);
+
+    // Get current line number or char position
+    int lineNum();
+    int charPos();
 
     // Check if current token is a specific type
     bool have(Token::Kind kind);

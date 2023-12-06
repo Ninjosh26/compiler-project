@@ -94,9 +94,95 @@ const char* enumName[] = {
     "main", "function", "INT_VAL", "FLOAT_VAL", "IDENT", "EOF", "ERROR"
 };
 
+std::string Parser::reportSyntaxError(Token::Kind kind) {
+    std::string msg = "SyntaxError(" + std::to_string(lineNum()) + "," + std::to_string(charPos()) + ")[Expected "
+        + enumName[kind + NonTerminal::SIZE] + " but got " + enumName[currToken.kind() + NonTerminal::SIZE] + ".]"; 
+    errBuf.push_back(msg);
+    return msg;
+}
+
+std::string Parser::reportSyntaxError(NonTerminal nt) {
+    std::string msg = "SyntaxError(" + std::to_string(lineNum()) + "," + std::to_string(charPos()) + ")[Expected a token from " 
+        + enumName[nt] + " but got " + enumName[currToken.kind() + NonTerminal::SIZE] + ".]";
+    errBuf.push_back(msg);
+    return msg;
+}
+
+void Parser::printErrorReport() {
+    std::cout << "ERROR REPORT:" << std::endl;
+    std::cout << "---------------------------------------------------" << std::endl;
+    for (const std::string& msg : errBuf) {
+        std::cout << msg << "\n";
+    }
+}
+
+bool Parser::hasError() {
+    return !errBuf.empty();
+}
+
+int Parser::lineNum() { return currToken.lineNumber(); }
+
+int Parser::charPos() { return currToken.charPosition(); }
+
+bool Parser::have(Token::Kind kind) {
+    return currToken.kind() == kind;
+}
+
 bool Parser::have(NonTerminal nt) {
     return firstSet[nt][currToken.kind() / 8] & (0x1 << (currToken.kind() % 8));
 }
+
+bool Parser::accept(Token::Kind kind) {
+    if (have(kind)) {
+        currToken = scanner.next();
+        return true;
+    }
+    return false;
+}
+
+bool Parser::accept(NonTerminal nt) {
+    if (have(nt)) {
+        currToken = scanner.next();
+        return true;
+    }
+    return false;
+}
+
+bool Parser::expect(Token::Kind kind) {
+    if (accept(kind)) {
+        return true;
+    }
+    std::string msg = reportSyntaxError(kind);
+    throw QuitParseException(msg);
+}
+
+bool Parser::expect(NonTerminal nt) {
+    if (accept(nt)) {
+        return true;
+    }
+    std::string msg = reportSyntaxError(nt);
+    throw new QuitParseException(msg);
+}
+
+Token Parser::expectRetrieve(Token::Kind kind) {
+    Token tok = currToken;
+    if (accept(kind)) {
+        return tok;
+    }
+    std::string msg = reportSyntaxError(kind);
+    throw new QuitParseException(msg);
+}
+
+Token Parser::expectRetrieve(NonTerminal nt) {
+    Token tok = currToken;
+    if (accept(nt)) {
+        return tok;
+    }
+    std::string msg = reportSyntaxError(nt);
+    throw new QuitParseException(msg);
+}
+
+Parser::Parser(Scanner s): scanner(s), currToken(scanner.next()) {}
 
 void Parser::printFirstSets() {
     for (int nt = 0; nt < NonTerminal::SIZE; nt++) {
