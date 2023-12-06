@@ -15,10 +15,10 @@ This is the grammar description for the DeCo grammar. This is written is Wirth S
 \<digit> = "0" | "1" | ... | "9" .
 
 \<powOp> = "^" . <br>
-\<mulOp> = "*" | "/" | "%" | "&&" . <br>
+\<mulOp> = "\*" | "/" | "%" | "&&" . <br>
 \<addOp> = "+" | "-" | "||" . <br>
 \<relOp> = "==" | "!=" | "<" | "<=" | ">" | ">=" . <br>
-\<assignOp> = "=" | "+=" | "-=" | "*=" | "/=" | "%=" | "^=" . <br>
+\<assignOp> = "=" | "+=" | "-=" | "\*=" | "/=" | "%=" | "^=" . <br>
 \<unaryOp> = "++" | "--" .
 
 \<type> = "bool" | "int" | "float" .
