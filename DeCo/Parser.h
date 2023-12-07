@@ -64,6 +64,9 @@ public:
     // Create a parser using the provided Scanner
     Parser(Scanner s);
 
+    // Parse using the scanner
+    void parse();
+
     // Print out any errors
     void printErrorReport();
 
@@ -104,10 +107,8 @@ private:
     void program();
     void declList();
     void statSeq();
-    void decl();
     void varDecl();
     void funcDecl();
-    void ident();
     void paramList();
     void type();
     void funcBody();
@@ -124,17 +125,14 @@ private:
     void repeatStat();
     void returnStat();
     void relExpr();
+    void addExpr();
+    void mulExpr();
+    void powExpr();
+    void groupExpr();
     void relation();
     void assign();
     void funcCall();
     void designator();
-    void assignOp();
-    void unaryOp();
-    void relOp();
-    void addOp();
-    void mulOp();
-    void powOp();
-    void literal();
 };
 
 #endif

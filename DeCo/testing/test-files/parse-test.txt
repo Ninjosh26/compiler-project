@@ -1,0 +1,24 @@
+int x;
+
+function help(): void {
+
+}
+
+int y;
+
+function this(): int {
+    return 6;
+}
+
+main() : void {
+    int i;
+    i = 7;
+    i = i + 3;
+
+    for (i = 3; i < 8; i++) {
+        int j;
+        j = 4;
+
+        while (j > 2) {}
+    }
+}

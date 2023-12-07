@@ -4,12 +4,19 @@
 
 int main() {
     FILE* fp;
-    fp = fopen("scanner-input.txt", "r");
+    fp = fopen("test-files/parse-test.txt", "r");
     Scanner scanner(fp);
 
-    while (scanner.hasNext()) {
-        std::cout << scanner.next() << std::endl;
-    }
+    // while (scanner.hasNext()) {
+    //     std::cout << scanner.next() << std::endl;
+    // }
 
-    Parser::printFirstSets();
+    // Parser::printFirstSets();
+
+    Parser parser(scanner);
+    parser.parse();
+
+    if (parser.hasError()) {
+        parser.printErrorReport();
+    }
 }
