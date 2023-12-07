@@ -485,9 +485,26 @@ void Parser::relExpr() {
 void Parser::addExpr() {
     mulExpr();
 
-    while (have(NonTerminal::ADD_OP)) {
-        Token op = expectRetrieve(NonTerminal::ADD_OP);
-        mulExpr();
+    // May need to check for subtraction read as INT_VAL (4-3 as INT_VAL INT_VAL)
+    while (have(NonTerminal::ADD_OP) || have(Token::Kind::INT_VAL) || have(Token::Kind::FLOAT_VAL)) {
+        if (have(NonTerminal::ADD_OP)) {
+            Token op = expectRetrieve(NonTerminal::ADD_OP);
+            mulExpr();
+        } else {
+            Token val = currToken;
+
+            // Check if it is a negative number
+            if (val.lexeme().front() == '-') {
+                // Interpret as subtraction
+                Token op("-", val.lineNumber(), val.charPosition(), Token::Kind::SUB);
+
+                // Use rest of number as next token
+                Token::Kind k = val.kind() == Token::Kind::INT_VAL ? Token::Kind::INT_VAL : Token::Kind::FLOAT_VAL;
+                currToken = Token(val.lexeme().substr(1), val.lineNumber(), val.charPosition() + 1, k);
+            }
+
+            mulExpr();
+        }
     }
 }
 
